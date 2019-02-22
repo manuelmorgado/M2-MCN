@@ -1,0 +1,6 @@
+BLOCH OPTICAL EQUATIONS SIMULATION
+
+	- Standard BOE
+	- BOE with additional decay 
+
+DATE: Fri Feb 22 16:48:14 CET 2019
