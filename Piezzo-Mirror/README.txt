@@ -21,3 +21,23 @@ Version Beta VB1_PM
 
 
 DATE: Fri Feb 22 16:45:00 CET 2019
+
+Version Beta VB2_PM
+
+	Improvements:
+		
+		- Reads all files that ends in yPiezoMirror
+		- Does have the proper values in the axis
+		- Do all plots together
+
+	TO DO List:
+
+    		- Fix setpath2dir()
+    		- Fix loadata()
+    		- Include dGauss() and pod_difM() which is necessary for double gaussians
+    		- Include minima, maxima, peaks and derivative analysis pks(), cvalues()
+    		- Include convolve method discv()
+    		- Include error bars
+    		- Fix details of figure plots
+
+DATE: Tue Feb 26 17:43:11 CET 2019
