@@ -41,3 +41,22 @@ Version Beta VB2_PM
     		- Fix details of figure plots
 
 DATE: Tue Feb 26 17:43:11 CET 2019
+
+Version Beta VB3_PM
+
+	Improvements:
+		
+		- First try on the values of the stepsize and the voltage and velocity.
+		- Try Prof.'s approach about the distances between resonances.
+
+	TO DO List:
+
+    		- Fix setpath2dir()
+    		- Fix loadata()
+    		- Include dGauss() and pod_difM() which is necessary for double gaussians
+    		- Include minima, maxima, peaks and derivative analysis pks(), cvalues()
+    		- Include convolve method discv()
+    		- Include error bars
+		- Finish including the new parameters (i.e velocity, voltage, range and 		stepsize)
+
+DATE: Wed Mar  6 12:13:41 CET 2019
