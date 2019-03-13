@@ -20,3 +20,12 @@ New scripts:
 	NOTE: realistic values were introduced.
 
 Date: Wed Mar 6 12:19:51 CET 2019
+
+New scripts: 
+
+	- Interacting OBE solve the 4x4 dimensional density matrix.
+	- Mathematica notebooks for solve the master equation (von Neunmann eq.)
+
+	NOTE: still is not working the Rabi's oscillations [IMPORTANT TO SOLVE]
+
+Date: Wed Mar 13 10:26:52 CET 2019
