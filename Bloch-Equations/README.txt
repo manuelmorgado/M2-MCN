@@ -23,7 +23,7 @@ Date: Wed Mar 6 12:19:51 CET 2019
 
 New scripts: 
 
-	- Interacting OBE solve the 4x4 dimensional density matrix.
+	- Interacting OBE solve the 4x4 dimensional density matrix. (inter_beta.py)
 	- Mathematica notebooks for solve the master equation (von Neunmann eq.)
 
 	NOTE: still is not working the Rabi's oscillations [IMPORTANT TO SOLVE]
