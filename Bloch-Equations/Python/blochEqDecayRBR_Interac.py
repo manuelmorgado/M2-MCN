@@ -1,13 +1,14 @@
 """
 Solving the Bloch equations WITH DECAY
 by using the atomic ensembles of N
-Rydberg excitations.
+Rydberg excitations and interactions
+between ensembles.
 """
 
 
 """
 Created: Feb. 28th, 2019
-Last modification: Mar. 1st, 2019
+Last modification: Mar. 8st, 2019
 MORGADO, Manuel (M2-MCN , QMAT fellow)
 U. Strasbourg // ISIS // IPCMS
 Supervisor. Prf. Dr. S. Whitlock
@@ -120,11 +121,83 @@ def bloch_eq(rho,t):
     dr11dt = (-1j)*(np.conjugate(om))*(np.conjugate(r12)) + (1j)*(om)*(r12) + (g)*(n+1)*(r22) - (n)*(g)*(r11);
     #Adding a decay term of the population for r22
     # dr12dt = ((-1)*(1j)*(d)*(r12)) - ((1j)*(np.conjugate(om))*(r22-r11)) - (((0.5)*(g)*((2*n)+1)*(r12))) - ((1j)*(g_decay)*(r12));
-    dr12dt = (r12)*((-1j)*(d) - (0.5)*(g)*(2*n+1) - (1)*(gd) - (1)*g_def) - (1j)*(np.conjugate(om))*(r22-r11);
+    dr12dt = (r12)*((-1j)*(d) - (0.5)*(g)*(2*n+1) - (1)*(gd)) - (1j)*(np.conjugate(om))*(r22-r11);
     #Now the r11+r22=1 doesnt hold anymore
     # dr22dt = ((1j)*(np.conjugate(om))*(np.conjugate(r12))) - ((1j)*(om)*(r12)) - ((n)*(g)*(r22)) - ((g)*(r22)) + ((n)*(g)*(r11)) - ((1j)*(g_decay)*(r22));
     dr22dt = (1j)*(np.conjugate(om))*(np.conjugate(r12)) - (1j)*(om)*(r12) - ( (n)*(g) + (g) + ((1)*(gd)) )*(r22) + (n)*(g)*(r11);
     return [dr11dt, dr12dt, dr22dt]
+
+#bloch optical equations, interacting ensembles
+def bloch_eq2(rho, t):
+    '''
+    Using the Master equation:
+
+    $\frac{d rho}{dt}  = - \frac{i}{\hbar} \com{\mathbf{H}}{rho}$
+
+    where the Hamiltonian is:
+
+    $\mathbf{H} = \sum_{i} \left\{ \left\[ \Omega \sigma_{j}^{10} + \Omega^{*} \sigma_{j}^{01}\right\] + V_{ij}\sigma_{j}^{11}\sigma_{jj}^{11}$ 
+
+    and the rho is:
+
+    $\rho(t)=\left(\begin{array}{llll}
+        r_{1111}}(t) & r_{1110}(t) & r_{1101}(t) & r_{1100}(t) \\
+        r_{1011}(t) & r_{1010}(t) & r_{1001}(t) & r_{1000}(t) \\
+        r_{0111}(t) & r_{0110}(t) & r_{0101}(t) & r_{0100}(t) \\
+        r_{0010}(t) & r_{0010}(t) & r_{0001}(t) & r_{0000}(t)
+    \end{array}\right\) \right)
+
+
+    Here there is some change of notation between the Mathematica Notebook and the python script: e->1 and g-> 0.
+
+    '''
+    r1111 = rho[0]; #
+    r1110 = rho[1];
+    r1101 = rho[2];
+    r1100 = rho[3];
+
+    r1010 = rho[4]; #
+    r1001 = rho[5];
+    r1000 = rho[6];
+
+    r0101 = rho[7]; #
+    r0100 = rho[8];
+
+    r0000 = rho[9]; #
+
+    # dtr1111 = (-0.675 - 0.135j) -  1j * ((0.0j + 0.0j) + (1.5 + 0.3j) * np.conjugate(r1110) + (1.5 + 0.3j) * np.conjugate(r1101) - (1.5 - 0.3j) * r1110 - (1.5 - 0.3j) * r1101);
+    # dtr1110 = (-0.15 - 0.03j) -  1j * ((0.0 + 0.0j) + (1.5 + 0.3j) * np.conjugate(r1001) - (1.5 - 0.3j) * r1100 - (1.5 + 0.3j) * r1111 + (1.5 + 0.3j) * r1010);
+    # dtr1101 = (-0.1875 - 0.0375j) -  1j * ((0.0j + 0.0j) - (1.5 - 0.3j) * r1100 + (1.5 + 0.3j) * r1001 - (1.5 + 0.3j) * r1111 + (1.5 + 0.3j) * r0101);
+    # dtr1100 = (-0.3375 - 0.0675j) -  1j * ((0.0j + 0.0j) - (1.5 + 0.3j) * r1110 - (1.5 + 0.3j) * r1101 - (0.5 + 0.2j) * r1100 + (1.5 + 0.3j) * r1000 + (1.5 + 0.3j) * r0100);
+
+    # dtr1010 = (-0.3 - 0.06j) - 1j * ((0.0 + 0.0j) - (1.5 + 0.3j) * np.conjugate(r1110) + (1.5 + 0.3j) * np.conjugate(r1000) + (1.5 - 0.3j) * r1110 - (1.5 - 0.3j) * r1000);
+    # dtr1001 = (-0.15 - 0.03j) - 1j * ((0.0 + 0.0j) - (1.5 + 0.3j) * np.conjugate(r1110) + (1.5 + 0.3j) * np.conjugate(r0100) + (1.5 - 0.3j) * r1101 - (1.5 - 0.3j) * r1000);
+    # dtr1000 = (-0.15 - 0.03j) - 1j * ((0.0 + 0.0j) + (1.5 - 0.3j) * r1100 - (1.5 + 0.3j) * r1001 - (0.5 + 0.2j) * r1000 - (1.5 + 0.3j)*  r1010 + (1.5 + 0.3j) * r0000);
+
+    # dtr0101 = (-0.375 - 0.075j) - 1j * ((0.0 + 0.0j) - (1.5 + 0.3j) * np.conjugate(r1101) + (1.5 + 0.3j) * np.conjugate(r0100) + (1.5 - 0.3j) * r1101 - (1.5 - 0.3j) * r0100);
+    # dtr0100 = (-0.1875 - 0.0375j) - 1j * ((0.0 + 0.0j) - (1.5 + 0.3j) * np.conjugate(r1001) + (1.5 - 0.3j) * r1100 - (0.5 + 0.2j) * r0100 + (1.5 + 0.3j) * r0000 - (1.5 + 0.3j) * r0101);
+
+    # dtr1111 = (1.35 + 0.27j) - 1j * ((0.0 + 0.0j) - (1.5 + 0.3j) * np.conjugate(r1000) - (1.5 + 0.3j) * np.conjugate(r0100) + (1.5 - 0.3j) * r1000 + (1.5 - 0.3j) * r0100);
+
+####
+    
+    # r1111 + r1010 + r0101 + r0000 = 1 -> r1111  = 1 - r1010 - r0101 - r0000
+
+    dtr1111 = -1j*(om*np.conjugate(r1110) + om*np.conjugate(r1101) - np.conjugate(om)*r1110 - np.conjugate(om)*r1101)- GA - GB;
+    dtr1110 = -1j*(om*np.conjugate(r1001) - np.conjugate(om)*r1100 - om*(1 - r1010 - r0101 - r0000) + om*r1010) - GA/2;
+    dtr1101 = -1j*(-np.conjugate(om)*r1100 + om*r1001 - om*(1 - r1010 - r0101 - r0000) + om*r0101) - GB/2;
+    dtr1100 = -1j*(-om*r1110 - om*r1101 + om*r0100 - r1100*Vij) - (GA+GB)/2;
+
+    dtr1010 = -1j*(-om*np.conjugate(r1110) + om*np.conjugate(r1000) + np.conjugate(om)*r1110 - np.conjugate(om)*r1000) - GA;
+    dtr1001 = -1j*(-om*np.conjugate(r1110) + om*np.conjugate(r0100) + np.conjugate(om)*r1101 - np.conjugate(om)*r1000) - GA/2;
+    dtr1000 = -1j*(np.conjugate(om)*r1100 - om*r1001 - om*r1010 + om*r0000 - r1000*Vij) - GA/2;
+
+    dtr0101 = -1j*(-om*np.conjugate(r1101) + om*np.conjugate(r0100) + np.conjugate(om)*r1101 - np.conjugate(om)*r0100) -GB;
+    dtr0100 = -1j*(-om*np.conjugate(r1001) + np.conjugate(om)*r1100 + om*r0000 - om*r0101 - r0100*Vij ) - GB/2;
+
+    dtr1111 = -1j*(-om*np.conjugate(r1000) - om*np.conjugate(r0100) + np.conjugate(om)*r1000 + np.conjugate(om)*r0100) + 2*(GA + GB);
+
+    return [dtr1111, dtr1110, dtr1101, dtr1100, dtr1010, dtr1001, dtr1000, dtr0101, dtr0100, dtr1111]
 
 #multiplot function for plot many lineshapes in a plot
 def multiplot(axis,lst, title='Title', ax=0):
@@ -164,8 +237,6 @@ def OscDec(x, fr, g, noi_var, de, dh, phi):
     """
     Equation equation (6) from PhysRevLett.122.053601 
 
-    Another reference: https://arxiv.org/pdf/0810.0339.pdf
-
     fr: relative population of the Rydberg state
     g: decay rate from |r> to |s> 
     noi_var: noise variance
@@ -199,21 +270,22 @@ g_decay : decay rate from r->x where x is some other stay of decay (float array)
 gamma : it is decay rate from r->g (float array) [KHz]
 n : the number of thermal photons (float) [UNITS]
 delta : detuning (float array) [Hz]
-g_def : dephasing rate [KHz]
-
-
-# #to be use for an scan on omega->g_decay
-# omega = np.linspace(0,5,10, dtype=np.complex_);
-# g_decay = np.linspace(0,3,500);
 """
 
 omega = np.complex(input("Introduce a value for the Rabi frequency [KHz]: ")); #request a Rabi frequency's value [KHz]
-g_decay = [0.01*omega, 0.25*omega, 1.0*omega, 15*omega]; #set values of decay rate [KHz]
-gamma = [0.0, 0.01*omega, 0.2*omega, 2*omega];
+g_decay = [0.01*omega, 0.25*omega, 0.75*omega, 15*omega]; #set values of decay rate [KHz]
+
+gamma = [0.0, 0.0, 0.2*omega, 2*omega];
 delta = [0.0, 4*omega, 0.0, 0.0];
+
+GA = 0.1*omega #[0.0, 0.1*omega, 0.5*omega, 2*omega];
+GB = 0.1*omega #[0.0, 0.1*omega, 0.5*omega, 2*omega];
+g_dep = 0.0;
+g_dec = 0.0;
+Vij = 0.2;
+delta =[0.0, 0.5*omega, omega, 2.0*omega];
 n = 0.0;
 
-g_def = 2*np.pi*10; #[KHz]
 
 #differential equation parameters
 '''
@@ -223,143 +295,35 @@ rho : density matrix [(r11, r12);(r21,222)]
 With initial conditions where the system initially is in the ground-state (|g>)
 r11[0]=0; r12[0]=0; r21[0]=0; r22[0]=1; <-- Very important
 '''
-rho0 = [0.0, 0.0, 1.0];
-t = np.linspace(0,0.2,500);
-rho11 = list(); rho12 = list(); rho22 = list(); 
-rhoT = list();
-t_minima = list();
-i=0; #counter in the number of atoms
-
-frequ = list();
-# minima = list();
-
-####################################################################################################
-####| HERE DOING THE CALCULATIONS OF THE FREQUENCY AND SOLVING OBE WITH EXTRA DECAY AND N-ENSEMBLE|#
-
-# #loop for the different values of gamma, delta, omega and gamma decay
-# for k in range(4):
-
-#     n_ensemble = 20;
-#     om = np.sqrt(n_ensemble)*omega;
-#     gd = g_decay[k];
-#     # print(om, '|| ', type(om))
-#     # print(gd, '||', type(gd))
-
-
-#     g = gamma[3];
-#     d = delta[3];
-
-#     #solving the differential equation
-#     rho, infodict = odeintz(bloch_eq, rho0, t, full_output=True);
-
-#     #storing the k-th results for r12 and r22
-#     r11 = rho[:,0];
-#     r12 = rho[:,1];
-#     r22 = rho[:,2];
-
-#     #stacking in the data
-#     rho11.append(r11);
-#     rho12.append(r12);
-#     rho22.append(r22);
-
-#     #rho22 at certain time
-#     # rhoT.append(r22[350]);
-
-# #ploting
-# plt.figure('rho22 (variable: = )')
-# f1, = plt.plot(t, rho22[0], 'r-', label=r'\Gamma = 4\Omega_R; \delta =  0; \gamma = 0.01\Omega_R')
-# f2, = plt.plot(t, rho22[1], 'b-', label=r'\Gamma = 4\Omega_R; \delta =  0; \gamma = 0.25\Omega_R')
-# f3, = plt.plot(t, rho22[2], 'g-', label=r'\Gamma = 4\Omega_R; \delta =  0; \gamma = 0.75\Omega_R')
-# f4, = plt.plot(t, rho22[3], '-', label=r'\Gamma = 4\Omega_R; \delta =  0; \gamma = 15\Omega_R')
-# plt.legend(handler_map={f1: HandlerLine2D(numpoints=4)})
-# plt.title(r'$\rho_{22}$ with decay term. $\Omega_R=1.5$')
-# plt.ylabel(r'\rho_{22}(t)')
-# plt.xlabel('t')
-# plt.grid()
-
 
 #loop for the different values of n_ensemble
-n_ensemble = np.linspace(50,50,1);
+
+
+rho04x4 = [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+t = np.linspace(0,16,500);
+n_ensemble = np.linspace(15,15,1);
+rho2eglst = list();
+
+####################################################################################################
+####| HERE DOING THE CALCULATIONS OF INTERACTIONS BETWEEN N-ENSEMBLES|#
+
+
 for natoms in n_ensemble:
 
     om = np.sqrt(natoms)*omega;
-    gd = g_decay[0];
-    g = gamma[1];
-    d = delta[3];
 
     #solving the differential equation
-    rho, infodict = odeintz(bloch_eq, rho0, t, full_output=True);
+    rho, infodict = odeintz(bloch_eq2, rho04x4, t, full_output=True);
 
     #storing the natoms-th results for r12 and r22
-    r11 = rho[:,0];
-    r12 = rho[:,1];
-    r22 = rho[:,2];
+    r2eg = rho[:,7];
 
-    #fit for the Oscillatory decay functions
-    """
-    This doesn't work with a function like: a*exp(-b*t)*cos(w*t+c)+d ,
-    even though Plot[(2 *x* exp(-x*3) * cos(10*x)/(x ))+3e^(-x)] for x in [0 to 4]
-    seems to be very similar by using Worlfram.
-
-    We then use the eq.(6) in : where is now going to be our function OscDec(). 
-
-    OscDec(x, fr, g, noi_var, de, d, phi)
-    """
-
-    popt, pcov = sp.optimize.curve_fit(OscDec, t, np.real(r22), p0=[((np.real(om)**2)/(np.real(g)**2+4*np.real(d)**2)),  np.real(g)+np.real(gd),  0.0,  0.0,  np.real(d),  0.0]);
-    f_om = np.sqrt(popt[0]*(np.real(g)**2 + 4*np.real(d)**2));
-    frequ.append(f_om/omega);
-    # plt.figure('Fits')
-    # plt.plot(t,OscDec(t, popt[0], popt[1], popt[2], popt[3], popt[4], popt[5]))
-
-    #finding the minima
-    find_min = argrelextrema(r22, np.less);
-    t_minima.append(t[find_min]);
 
     #stacking in the data
-    rho11.append(r11);
-    rho12.append(r12);
-    rho22.append(r22);
-
-    i+=1; #counting
-
-# plt.figure('Square Root behavior (By fitting)')
-# plt.plot(frequ)
-# plt.ylabel(r'$\frac{\Omega}{\Omega_R}$')
-# plt.xlabel('\# Atoms')
-
-# avedif = ave_dif(t_minima);
-# plt.figure('Square Root behavior (By average of Difference)')
-# plt.plot(n_ensemble, avedif)
-# # plt.title(r'$\rho_{22}$ with decay term. $\Omega_R=1.75$')
-# plt.ylabel(r'$\frac{\Omega}{\Omega_R}$')
-# plt.xlabel('\# Atoms')
-# plt.ylim([0.0, 20])
-# plt.xlim([0.0, 100])
+    rho2eglst.append(r2eg);
 
 #ploting
 plt.figure()
-multiplot(t,rho22, r'$\rho_{22}$ with decay term. $\Omega_R=$ %.2f KHz ' %(np.real(omega)))
-multiplot(t,rho11)#, r'$\rho_{22}$ with decay term. $\Omega_R=$ %.2f KHz ' %(np.real(omega)))
-multiplot(t,rho1 2)#, r'$\rho_{22}$ with decay term. $\Omega_R=$ %.2f KHz ' %(np.real(omega)))
-plt.ylabel(r'$\frac{\rho_{22}(t)}{\rho_{22}(0)} $')
-plt.xlabel('t [ms]')
-
-
-# fig = plt.figure('rho22 (omega, gdecay) @ t=1.75')
-# ax = fig.gca(projection='3d')
-# ax.plot_trisurf(np.real(omega), np.real(g_decay), np.real(rhoT))
-
-# plt.figure('rho12')
-# g1, = plt.plot(t, rho12[0], 'r-', label=r'\Gamma = 0; \delta =  0')
-# g2, = plt.plot(t, rho12[1], 'b-', label=r'\Gamma = 0; \delta =  4\Omega_R')
-# g3, = plt.plot(t, rho12[2], 'g-', label=r'\Gamma = 0.2\Omega_R; \delta = 0')
-# g4, = plt.plot(t, rho12[3], '-', label=r'\Gamma = 2\Omega_R; \delta =  0')
-# plt.legend(handler_map={g1: HandlerLine2D(numpoints=4)})
-# # plt.legend(loc='best')
-# plt.ylabel(r'\rho_{12}(t)')
-# plt.xlabel('t')
-# plt.grid()
-
+multiplot(t,rho2eglst)
 
 plt.show()

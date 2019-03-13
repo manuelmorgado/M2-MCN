@@ -1,13 +1,14 @@
 """
 Solving the Bloch equations WITH DECAY
 by using the atomic ensembles of N
-Rydberg excitations.
+Rydberg excitations and interactions
+between ensembles.
 """
 
 
 """
 Created: Feb. 28th, 2019
-Last modification: Mar. 1st, 2019
+Last modification: Mar. 7st, 2019
 MORGADO, Manuel (M2-MCN , QMAT fellow)
 U. Strasbourg // ISIS // IPCMS
 Supervisor. Prf. Dr. S. Whitlock
@@ -128,23 +129,57 @@ def bloch_eq(rho,t):
 
 #bloch optical equations, interacting ensembles
 def bloch_eq2(rho, t):
-    r11A = rho[0];
-    r12A = rho[1];
-    r22A = rho[2];
+    '''
+    Using the Master equation:
 
-    r11B = rho[3];
-    r12B = rho[4];
-    r22B = rho[5];
+    $\frac{d rho}{dt}  = - \frac{i}{\hbar} \com{\mathbf{H}}{rho}$
 
-    dr11dtA = (-1j)*(np.conjugate(om))*(np.conjugate(r12A)) + (1j)*(om)*(r12A) + (g)*(n+1)*(r22A) - (n)*(g)*(r11A);
-    dr12dtA = (r12A)*((-1j)*(d) - (0.5)*(g)*(2*n+1) - (1)*(gd)) - (1j)*(np.conjugate(om))*(r22A-r11A);
-    dr22dtA = (1j)*(np.conjugate(om))*(np.conjugate(r12A)) - (1j)*(om)*(r12A) - ( (n)*(g) + (g) + ((1)*(gd)) )*(r22A) + (n)*(g)*(r11A) + Vab*r22A*r22B;
-    
-    dr11dtB = (-1j)*(np.conjugate(om))*(np.conjugate(r12B)) + (1j)*(om)*(r12B) + (g)*(n+1)*(r22B) - (n)*(g)*(r11B);
-    dr12dtB = (r12B)*((-1j)*(d) - (0.5)*(g)*(2*n+1) - (1)*(gd)) - (1j)*(np.conjugate(om))*(r22B-r11B);
-    dr22dtB = (1j)*(np.conjugate(om))*(np.conjugate(r12B)) - (1j)*(om)*(r12B) - ( (n)*(g) + (g) + ((1)*(gd)) )*(r22B) + (n)*(g)*(r11B) - Vab*r22B*r22A;
+    where the Hamiltonian is:
 
-    return [dr11dtA, dr12dtA, dr22dtA, dr11dtB, dr12dtB, dr22dtB]
+    $\mathbf{H} = \sum_{i} \left\{ \left\[ \Omega \sigma_{j}^{10} + \Omega^{*} \sigma_{j}^{01}\right\] + V_{ij}\sigma_{j}^{11}\sigma_{jj}^{11}$ 
+
+    and the rho is:
+
+    $\rho(t)=\left(\begin{array}{llll}
+        r_{1111}}(t) & r_{1110}(t) & r_{1101}(t) & r_{1100}(t) \\
+        r_{1011}(t) & r_{1010}(t) & r_{1001}(t) & r_{1000}(t) \\
+        r_{0111}(t) & r_{0110}(t) & r_{0101}(t) & r_{0100}(t) \\
+        r_{0010}(t) & r_{0010}(t) & r_{0001}(t) & r_{0000}(t)
+    \end{array}\right\) \right)
+
+
+    Here there is some change of notation between the Mathematica Notebook and the python script: e->1 and g-> 0.
+
+    '''
+    r1111 = rho[0];
+    r1110 = rho[1];
+    r1101 = rho[2];
+    r1100 = rho[3];
+
+    r1010 = rho[4];
+    r1001 = rho[5];
+    r1000 = rho[6];
+
+    r0101 = rho[7];
+    r0100 = rho[8];
+
+    r0000 = rho[9];
+
+    dtr1111 = (-0.675 - 0.135j) -  1j * ((0.0j + 0.0j) + (1.5 + 0.3j) * np.conjugate(r1110) + (1.5 + 0.3j) * np.conjugate(r1101) - (1.5 - 0.3j) * r1110 - (1.5 - 0.3j) * r1101);
+    dtr1110 = (-0.15 - 0.03j) -  1j * ((0.0 + 0.0j) + (1.5 + 0.3j) * np.conjugate(r1001) - (1.5 - 0.3j) * r1100 - (1.5 + 0.3j) * r1111 + (1.5 + 0.3j) * r1010);
+    dtr1101 = (-0.1875 - 0.0375j) -  1j * ((0.0j + 0.0j) - (1.5 - 0.3j) * r1100 + (1.5 + 0.3j) * r1001 - (1.5 + 0.3j) * r1111 + (1.5 + 0.3j) * r0101);
+    dtr1100 = (-0.3375 - 0.0675j) -  1j * ((0.0j + 0.0j) - (1.5 + 0.3j) * r1110 - (1.5 + 0.3j) * r1101 - (0.5 + 0.2j) * r1100 + (1.5 + 0.3j) * r1000 + (1.5 + 0.3j) * r0100);
+
+    dtr1010 = (-0.3 - 0.06j) - 1j * ((0.0 + 0.0j) - (1.5 + 0.3j) * np.conjugate(r1110) + (1.5 + 0.3j) * np.conjugate(r1000) + (1.5 - 0.3j) * r1110 - (1.5 - 0.3j) * r1000);
+    dtr1001 = (-0.15 - 0.03j) - 1j * ((0.0 + 0.0j) - (1.5 + 0.3j) * np.conjugate(r1110) + (1.5 + 0.3j) * np.conjugate(r0100) + (1.5 - 0.3j) * r1101 - (1.5 - 0.3j) * r1000);
+    dtr1000 = (-0.15 - 0.03j) - 1j * ((0.0 + 0.0j) + (1.5 - 0.3j) * r1100 - (1.5 + 0.3j) * r1001 - (0.5 + 0.2j) * r1000 - (1.5 + 0.3j)*  r1010 + (1.5 + 0.3j) * r0000);
+
+    dtr0101 = (-0.375 - 0.075j) - 1j * ((0.0 + 0.0j) - (1.5 + 0.3j) * np.conjugate(r1101) + (1.5 + 0.3j) * np.conjugate(r0100) + (1.5 - 0.3j) * r1101 - (1.5 - 0.3j) * r0100);
+    dtr0100 = (-0.1875 - 0.0375j) - 1j * ((0.0 + 0.0j) - (1.5 + 0.3j) * np.conjugate(r1001) + (1.5 - 0.3j) * r1100 - (0.5 + 0.2j) * r0100 + (1.5 + 0.3j) * r0000 - (1.5 + 0.3j) * r0101);
+
+    dtr1111 = (1.35 + 0.27j) - 1j * ((0.0 + 0.0j) - (1.5 + 0.3j) * np.conjugate(r1000) - (1.5 + 0.3j) * np.conjugate(r0100) + (1.5 - 0.3j) * r1000 + (1.5 - 0.3j) * r0100);
+
+    return [dtr1111, dtr1110, dtr1101, dtr1100, dtr1010, dtr1001, dtr1000, dtr0101, dtr0100, dtr1111]
 
 #multiplot function for plot many lineshapes in a plot
 def multiplot(axis,lst, title='Title', ax=0):
@@ -250,40 +285,40 @@ frequ = list();
 ####################################################################################################
 ####| HERE DOING THE CALCULATIONS OF THE FREQUENCY AND SOLVING OBE WITH EXTRA DECAY AND N-ENSEMBLE|#
 
-#loop for the different values of n_ensemble
-n_ensemble = np.linspace(15,15,1);
-for natoms in n_ensemble:
+# #loop for the different values of n_ensemble
+# n_ensemble = np.linspace(15,15,1);
+# for natoms in n_ensemble:
 
-    om = np.sqrt(natoms)*omega;
-    gd = g_decay[2];
-    g = gamma[3];
-    d = delta[3];
-    Vab = 0.2;
+#     om = np.sqrt(natoms)*omega;
+#     gd = g_decay[2];
+#     g = gamma[3];
+#     d = delta[3];
+#     Vab = 0.2;
 
-    #solving the differential equation
-    rho, infodict = odeintz(bloch_eq2, rho01, t, full_output=True);
+#     #solving the differential equation
+#     rho, infodict = odeintz(bloch_eq2, rho01, t, full_output=True);
 
-    #storing the natoms-th results for r12 and r22
-    r11A = rho[:,0];
-    r12A = rho[:,1];
-    r22A = rho[:,2];
+#     #storing the natoms-th results for r12 and r22
+#     r11A = rho[:,0];
+#     r12A = rho[:,1];
+#     r22A = rho[:,2];
 
-    r11B = rho[:,3];
-    r12B = rho[:,4];
-    r22B = rho[:,5];
+#     r11B = rho[:,3];
+#     r12B = rho[:,4];
+#     r22B = rho[:,5];
 
-    #stacking in the data
-    rho11A.append(r11A);
-    rho12A.append(r12A);
-    rho22A.append(r22A);
-    rho11B.append(r11B);
-    rho12B.append(r12B);
-    rho22B.append(r22B);
+#     #stacking in the data
+#     rho11A.append(r11A);
+#     rho12A.append(r12A);
+#     rho22A.append(r22A);
+#     rho11B.append(r11B);
+#     rho12B.append(r12B);
+#     rho22B.append(r22B);
 
-#ploting
-plt.figure()
-multiplot(t,rho22A)
-multiplot(t,rho22B)
+# #ploting
+# plt.figure()
+# multiplot(t,rho22A)
+# multiplot(t,rho22B)
 # multiplot(t,rho22A)#, r'$\rho_{22}$ with decay term. $\Omega_R=$ %.2f ' %(np.real(omega)))
 # plt.ylabel(r'$\frac{\rho_{22}(t)}{\rho_{22}(0)} $')
 # plt.xlabel('t [ms]')
@@ -304,5 +339,38 @@ multiplot(t,rho22B)
 # plt.xlabel('t')
 # plt.grid()
 
+####################################################################################################
+####| HERE DOING THE CALCULATIONS OF INTERACTIONS BETWEEN N-ENSEMBLES|#
+
+
+#loop for the different values of n_ensemble
+n_ensemble = np.linspace(15,15,1);
+
+rho04x4 = [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+
+rho2eglst = list();
+
+for natoms in n_ensemble:
+
+    om = np.sqrt(natoms)*omega;
+    gd = g_decay[2];
+    g = gamma[3];
+    d = delta[3];
+    Vab = 0.2;
+
+    #solving the differential equation
+    rho, infodict = odeintz(bloch_eq2, rho04x4, t, full_output=True);
+
+    #storing the natoms-th results for r12 and r22
+    r2eg = rho[:,4];
+
+
+    #stacking in the data
+    rho2eglst.append(r2eg);
+
+
+#ploting
+plt.figure()
+multiplot(t,rho2eglst)
 
 plt.show()
