@@ -1,0 +1,215 @@
+·ADC_UVPhotodiode2: power of UV laser.
+
+·AtomDensity: density from the cloud's center.
+
+·AtomNumber: number of atoms.
+
+·CloudSize: size of the cloud.
+
+·PeakOD: number of atoms (proportional to intensity).
+
+CloudSigmaX: 
+CloudSigmaY:
+
+·Rotation: rotation of fitting the gaussian.
+
+·PositionX: position fit in x-direction.
+
+·PositionY: position fit in y-direction.
+
+·Fluorescence: peak counting of fluorescence.
+
+·tExposure: mode ON imaging time.
+
+·tExposureTop: imaging time of camera on Top.
+
+·tDelayForIMA: time gap between camera exposure.
+
+·tLoad: MOT loading time.
+
+·tTOF: 'time of fly' time when atoms expand.
+
+·tCamRead: time for image reading the camera (no used).
+
+·tCMOTramp: time of compress MOT.
+
+tD1ramp: 
+tODThold:
+tHold:
+tEvapHold:
+
+·tODTevap1: evaporation time.
+·tODTevap2: evaporation time.
+·tODTevap3: evaporation time.
+·tODTevap: evaporation time.
+
+t2photOn
+t2photOff:
+tSpinPol:
+tGM:
+dRyd767:
+dImageF2:
+dImageF2co:
+pImageF2:
+dImageF2re:
+pImageF2re:
+dImageF2coTop:
+p2photRed:
+dD2:
+dD2reset:
+dD2re:
+dD2co:
+pMOTre:
+pMOTco:
+pCMOTre:
+pCMOTco:
+dCMOTre:
+dCMOTco:
+dD1:
+dD1reset:
+dD1re:
+dD1co:
+pD1re:
+pD1co:
+dGM:
+dGMre:
+dGMco:
+pGMre:
+pGMco:
+
+·bMOT: voltage to the source for the MOT.
+
+bCMOT:
+bFeshbach:
+bFeshbach1:
+bFeshbach2:
+bFeshbach3:
+bXcomp:
+bYcomp:
+bZcomp:
+bYimage:
+bXGM:
+bYGM:
+bZGM:
+bXrf:
+bYrf:
+bZrf:
+d2DMOTco:
+
+·pDimple:power of the dimple.
+
+pDimpleEnd1:
+pDimpleEnd2:
+pDimpleEnd3:
+pDimpleSpec:
+pDimpleGM:
+
+·pPancake: power of the beam that creates pancake.
+
+pReservoir:
+pReservoirEnd1:
+pReservoirEnd2:
+pLattice:
+offset:
+dTopco:
+dImageTop:
+tTranslation:
+fDDS767:
+fDDS767reset:
+fDDS767high:
+fDDS920:
+fDDS920high:
+tShutterUV:
+tCMOTUV:
+tODTUV:
+pUVin:
+pUVreset:
+deltapUV:
+eCompCh0:
+eCompCh1:
+eCompCh2:
+eCompCh3:
+eCompCh4:
+eCompCh5:
+eCompCh6:
+eCompCh7:
+dSpec:
+tSpec:
+pRyd767:
+bMOTimag:
+dProbeD2:
+pProbeD2:
+pSPco:
+dSPco:
+dImageF1:
+pImageF1:
+dImageF1re:
+fDDSrf:
+fDDSrfdetuning:
+fDDSrfdetuning2:
+pDDSrf:
+tDDSrf:
+tRFpi:
+tRFdelay:
+RamseyPhase:
+bYpump:
+blueON:
+fDDS575:
+UVtwice:
+tUVAOM:
+tUVAOMoff:
+UVON:
+tUVON:
+tUVStrobo:
+RepStrob:
+Efield0off:
+Efield0on:
+Efield1off:
+Efield1on:
+tUVseed:
+ReadOutT:
+tUVAOM2:
+dOmegaf:
+tRepumpBlow:
+tRamseyPrep:
+dRepumpBlow:
+pRepumpBlow:
+dImageBlow:
+dImageBlowF2:
+pImagBlow:
+tSpinPol0:
+tSpinPol2:
+tSpinPol1:
+tSpinPol3:
+ImageReOff:
+d3DCoolSPol0:
+fDDSrf2:
+tSpinPolPop:
+tSpinPolRF:
+fDDSrfSPm12:
+fDDSrfSPm1:
+fDDSrfSP0:
+fDDSrfSP1:
+fcoolSPrf:
+tSpinPolSw1:
+fSpinPolSw1:
+tSPrfsw1:
+sidebandtest:
+testSOC:
+pUVRamsey:
+tUVspect:
+tRFloss:
+tParamHeat:
+pParamHeat:
+fParamHeat:
+fDDSrfSPm10:
+tSpinPolRF2:
+fDDSrfSPm00:
+tHold2:
+Edeflection:
+xPiezoMirror:
+yPiezoMirror:
+evapYibo:
+tLifetime:
+pUV:
+pUV2:

@@ -22,6 +22,8 @@ Version Beta VB1_PM
 
 DATE: Fri Feb 22 16:45:00 CET 2019
 
+===
+
 Version Beta VB2_PM
 
 	Improvements:
@@ -41,6 +43,8 @@ Version Beta VB2_PM
     		- Fix details of figure plots
 
 DATE: Tue Feb 26 17:43:11 CET 2019
+
+===
 
 Version Beta VB3_PM
 
