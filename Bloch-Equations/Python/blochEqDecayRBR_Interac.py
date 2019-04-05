@@ -42,7 +42,9 @@ NOTE: notation between |1> and |2> it is exchanged by |g> and |r> during the scr
 """
 TO DO List:
 
-    - 
+    - Add the mean-field approximation for Vij
+    - Add a proper value for the Gspon, Gtherm, Gdephase in Mathematica notebook
+    - Check multilevel systems (> 2 level system) [Ref. Lukin Lectures]
 
 """
 
@@ -150,6 +152,8 @@ def bloch_eq2(rho, t):
 
     Here there is some change of notation between the Mathematica Notebook and the python script: e->1 and g-> 0.
 
+
+    variables/parameters : Vij, delta, 
     '''
     r1111 = rho[0]; #
     r1110 = rho[1];
@@ -165,39 +169,45 @@ def bloch_eq2(rho, t):
 
     r0000 = rho[9]; #
 
-    # dtr1111 = (-0.675 - 0.135j) -  1j * ((0.0j + 0.0j) + (1.5 + 0.3j) * np.conjugate(r1110) + (1.5 + 0.3j) * np.conjugate(r1101) - (1.5 - 0.3j) * r1110 - (1.5 - 0.3j) * r1101);
-    # dtr1110 = (-0.15 - 0.03j) -  1j * ((0.0 + 0.0j) + (1.5 + 0.3j) * np.conjugate(r1001) - (1.5 - 0.3j) * r1100 - (1.5 + 0.3j) * r1111 + (1.5 + 0.3j) * r1010);
-    # dtr1101 = (-0.1875 - 0.0375j) -  1j * ((0.0j + 0.0j) - (1.5 - 0.3j) * r1100 + (1.5 + 0.3j) * r1001 - (1.5 + 0.3j) * r1111 + (1.5 + 0.3j) * r0101);
-    # dtr1100 = (-0.3375 - 0.0675j) -  1j * ((0.0j + 0.0j) - (1.5 + 0.3j) * r1110 - (1.5 + 0.3j) * r1101 - (0.5 + 0.2j) * r1100 + (1.5 + 0.3j) * r1000 + (1.5 + 0.3j) * r0100);
+    ####
+    '''
+    Without Spontaneous Emission (Only Rabi oscillations)
+    '''
+    # dtr1111 = complex( 0,1 ) * ( 0.5 * r1100 * Vij - 0.5 * Vij * np.conjugate( r1100 ) );
+    # dtr1110 = complex( 0,1 ) * ( delta * r1110 + ( 2 * om * r1110 + ( 0.5 * r1101 * Vij - 0.5 * Vij * np.conjugate( r1000 ) ) ) );
+    # dtr1101 = complex( 0,1 ) * ( -1 * delta * r1101 + ( 2 * om * r1101) + ( 0.5 * r1110 * Vij - 0.5 * Vij * np.conjugate( r0100 ) ) );
+    # dtr1100 = complex( 0,1 ) * ( 4 * om * r1100 + ( -0.5 * r0000 * Vij + 0.5 * r1111 * Vij ) );
 
-    # dtr1010 = (-0.3 - 0.06j) - 1j * ((0.0 + 0.0j) - (1.5 + 0.3j) * np.conjugate(r1110) + (1.5 + 0.3j) * np.conjugate(r1000) + (1.5 - 0.3j) * r1110 - (1.5 - 0.3j) * r1000);
-    # dtr1001 = (-0.15 - 0.03j) - 1j * ((0.0 + 0.0j) - (1.5 + 0.3j) * np.conjugate(r1110) + (1.5 + 0.3j) * np.conjugate(r0100) + (1.5 - 0.3j) * r1101 - (1.5 - 0.3j) * r1000);
-    # dtr1000 = (-0.15 - 0.03j) - 1j * ((0.0 + 0.0j) + (1.5 - 0.3j) * r1100 - (1.5 + 0.3j) * r1001 - (0.5 + 0.2j) * r1000 - (1.5 + 0.3j)*  r1010 + (1.5 + 0.3j) * r0000);
+    # dtr1010 = complex( 0,1 ) * ( 0.5 * r1001 * Vij - 0.5 * Vij * np.conjugate(r1001 ) );
+    # dtr1001 = complex( 0,1 ) * ( -2 * delta * r1001 + ( -0.5 * r0101 * Vij + 0.5 * r1010 * Vij ) );
+    # dtr1000 = complex( 0,1 ) * ( -1 * delta * r1000 + ( 2 * om * r1000) + ( -0.5 * r0100 * Vij + 0.5 * Vij * np.conjugate( r1110 ) ) );
 
-    # dtr0101 = (-0.375 - 0.075j) - 1j * ((0.0 + 0.0j) - (1.5 + 0.3j) * np.conjugate(r1101) + (1.5 + 0.3j) * np.conjugate(r0100) + (1.5 - 0.3j) * r1101 - (1.5 - 0.3j) * r0100);
-    # dtr0100 = (-0.1875 - 0.0375j) - 1j * ((0.0 + 0.0j) - (1.5 + 0.3j) * np.conjugate(r1001) + (1.5 - 0.3j) * r1100 - (0.5 + 0.2j) * r0100 + (1.5 + 0.3j) * r0000 - (1.5 + 0.3j) * r0101);
+    # dtr0101 = complex( 0,1 ) * ( -0.5 * r1001 * Vij + 0.5 * Vij * np.conjugate( r1001 ) );
+    # dtr0100 = complex( 0,1 ) * ( delta * r0100 + ( 2 * om * r0100) + ( -0.5 * r1000 * Vij + 0.5 * Vij * np.conjugate( r1101 ) ) );
 
-    # dtr1111 = (1.35 + 0.27j) - 1j * ((0.0 + 0.0j) - (1.5 + 0.3j) * np.conjugate(r1000) - (1.5 + 0.3j) * np.conjugate(r0100) + (1.5 - 0.3j) * r1000 + (1.5 - 0.3j) * r0100);
+    # dtr1111 = complex( 0,1 ) * ( -0.5 * r1100 * Vij + 0.5 * Vij * np.conjugate( r1100 ) );
 
-####
+    ####
+    '''
+    With Spontaneous Emission
+    '''
+
+
+    dtr1111 = complex( 0,1 ) * ( 0.5 * r1100 * Vij - 0.5 * Vij * np.conjugate( r1100 ) ) + GA + GB;
+    dtr1110 = complex( 0,1 ) * ( delta * r1110 + ( 2 * om * r1110 + ( 0.5 * r1101 * Vij - 0.5 * Vij * np.conjugate( r1000 ) ) ) ) + GA/2;
+    dtr1101 = complex( 0,1 ) * ( -1 * delta * r1101 + ( 2 * om * r1101) + ( 0.5 * r1110 * Vij - 0.5 * Vij * np.conjugate( r0100 ) ) ) + GB/2;
+    dtr1100 = complex( 0,1 ) * ( 4 * om * r1100 + ( -0.5 * r0000 * Vij + 0.5 * (1 - (r0101 + r1010 + r0000)) * Vij ) ) + (GA+GB)/2;
+
+    dtr1010 = complex( 0,1 ) * ( 0.5 * r1001 * Vij - 0.5 * Vij * np.conjugate(r1001 ) ) + GA;
+    dtr1001 = complex( 0,1 ) * ( -2 * delta * r1001 + ( -0.5 * r0101 * Vij + 0.5 * r1010 * Vij ) ) + GA/2;
+    dtr1000 = complex( 0,1 ) * ( -1 * delta * r1000 + ( 2 * om * r1000) + ( -0.5 * r0100 * Vij + 0.5 * Vij * np.conjugate( r1110 ) ) ) + GA/2;
+
+    dtr0101 = complex( 0,1 ) * ( -0.5 * r1001 * Vij + 0.5 * Vij * np.conjugate( r1001 ) )+ GB;
+    dtr0100 = complex( 0,1 ) * ( delta * r0100 + ( 2 * om * r0100) + ( -0.5 * r1000 * Vij + 0.5 * Vij * np.conjugate( r1101 ) ) ) + GB/2;
+
+    dtr0000 = complex( 0,1 ) * ( -0.5 * r1100 * Vij + 0.5 * Vij * np.conjugate( r1100 ) ) -  2*(GA+GB);
     
-    # r1111 + r1010 + r0101 + r0000 = 1 -> r1111  = 1 - r1010 - r0101 - r0000
-
-    dtr1111 = -1j*(om*np.conjugate(r1110) + om*np.conjugate(r1101) - np.conjugate(om)*r1110 - np.conjugate(om)*r1101)- GA - GB;
-    dtr1110 = -1j*(om*np.conjugate(r1001) - np.conjugate(om)*r1100 - om*(1 - r1010 - r0101 - r0000) + om*r1010) - GA/2;
-    dtr1101 = -1j*(-np.conjugate(om)*r1100 + om*r1001 - om*(1 - r1010 - r0101 - r0000) + om*r0101) - GB/2;
-    dtr1100 = -1j*(-om*r1110 - om*r1101 + om*r0100 - r1100*Vij) - (GA+GB)/2;
-
-    dtr1010 = -1j*(-om*np.conjugate(r1110) + om*np.conjugate(r1000) + np.conjugate(om)*r1110 - np.conjugate(om)*r1000) - GA;
-    dtr1001 = -1j*(-om*np.conjugate(r1110) + om*np.conjugate(r0100) + np.conjugate(om)*r1101 - np.conjugate(om)*r1000) - GA/2;
-    dtr1000 = -1j*(np.conjugate(om)*r1100 - om*r1001 - om*r1010 + om*r0000 - r1000*Vij) - GA/2;
-
-    dtr0101 = -1j*(-om*np.conjugate(r1101) + om*np.conjugate(r0100) + np.conjugate(om)*r1101 - np.conjugate(om)*r0100) -GB;
-    dtr0100 = -1j*(-om*np.conjugate(r1001) + np.conjugate(om)*r1100 + om*r0000 - om*r0101 - r0100*Vij ) - GB/2;
-
-    dtr1111 = -1j*(-om*np.conjugate(r1000) - om*np.conjugate(r0100) + np.conjugate(om)*r1000 + np.conjugate(om)*r0100) + 2*(GA + GB);
-
-    return [dtr1111, dtr1110, dtr1101, dtr1100, dtr1010, dtr1001, dtr1000, dtr0101, dtr0100, dtr1111]
+    return [dtr1111, dtr1110, dtr1101, dtr1100, dtr1010, dtr1001, dtr1000, dtr0101, dtr0100, dtr0000]
 
 #multiplot function for plot many lineshapes in a plot
 def multiplot(axis,lst, title='Title', ax=0):
@@ -278,12 +288,12 @@ g_decay = [0.01*omega, 0.25*omega, 0.75*omega, 15*omega]; #set values of decay r
 gamma = [0.0, 0.0, 0.2*omega, 2*omega];
 delta = [0.0, 4*omega, 0.0, 0.0];
 
-GA = 0.1*omega #[0.0, 0.1*omega, 0.5*omega, 2*omega];
-GB = 0.1*omega #[0.0, 0.1*omega, 0.5*omega, 2*omega];
+GA = -0.0*omega #[0.0, 0.1*omega, 0.5*omega, 2*omega];
+GB = 0.0*omega #[0.0, 0.1*omega, 0.5*omega, 2*omega];
 g_dep = 0.0;
 g_dec = 0.0;
-Vij = 0.2;
-delta =[0.0, 0.5*omega, omega, 2.0*omega];
+Vij = 0.3;
+delta = 0.1 #[0.0, 0.5*omega, omega, 2.0*omega];
 n = 0.0;
 
 
@@ -300,9 +310,10 @@ r11[0]=0; r12[0]=0; r21[0]=0; r22[0]=1; <-- Very important
 
 
 rho04x4 = [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0];
-t = np.linspace(0,16,500);
+t = np.linspace(0,10,500);
 n_ensemble = np.linspace(15,15,1);
 rho2eglst = list();
+rho2gelst = list();
 
 ####################################################################################################
 ####| HERE DOING THE CALCULATIONS OF INTERACTIONS BETWEEN N-ENSEMBLES|#
@@ -316,14 +327,18 @@ for natoms in n_ensemble:
     rho, infodict = odeintz(bloch_eq2, rho04x4, t, full_output=True);
 
     #storing the natoms-th results for r12 and r22
-    r2eg = rho[:,7];
-
+    r2eg = rho[:,4];
+    r2ge = rho[:,7];
 
     #stacking in the data
     rho2eglst.append(r2eg);
+    rho2gelst.append(r2ge);
+
 
 #ploting
 plt.figure()
 multiplot(t,rho2eglst)
-
+#ploting
+plt.figure()
+multiplot(t,rho2gelst)
 plt.show()

@@ -7,6 +7,7 @@ Versions
 
 DATE: Fri Feb 22 16:48:14 CET 2019
 
+===
 
 New scripts:
 
@@ -19,7 +20,9 @@ New scripts:
 
 	NOTE: realistic values were introduced.
 
-Date: Wed Mar 6 12:19:51 CET 2019
+DATE: Wed Mar 6 12:19:51 CET 2019
+
+=====
 
 New scripts: 
 
@@ -28,4 +31,17 @@ New scripts:
 
 	NOTE: still is not working the Rabi's oscillations [IMPORTANT TO SOLVE]
 
-Date: Wed Mar 13 10:26:52 CET 2019
+DATE: Wed Mar 13 10:26:52 CET 2019
+
+
+=====
+
+Versions
+	- Python and Mathematica scripts are working fine for the solve the MEqs for a Hilbert x Hilbert where dim(Hilbert)=2
+
+New scripts: 
+	- seal.nb is the working notebook for mathematica
+	- vdw.py is a script for compute the van der Walls interaction.
+
+DATE: Tue Mar 26 11:12:30 CET 2019
+
